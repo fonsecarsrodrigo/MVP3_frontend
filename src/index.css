@@ -44,6 +44,7 @@ body {
 
 .site-body {
   flex: 1;
+  width: 100%;
   max-width: 960px;
   margin: 32px auto;
   padding: 24px;
@@ -54,6 +55,7 @@ body {
 
 .section-body {
   box-sizing: border-box;
+  width: 100%;
 }
 
 .site-body h2 {
