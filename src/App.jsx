@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import coverImage from '../images/bora_orneles_cover.webp';
 import servicesImage from '../images/bora_orneles_services.png';
+
+const API_BASE_URL = 'http://127.0.0.1:5001';
 
 function SiteHeader() {
   return <header className="site-header" style={{ backgroundImage: `url(${coverImage})` }} />;
@@ -41,98 +43,237 @@ function FormPage({ title, children }) {
           <div className="page-title-cell" />
         </div>
 
-        <form className="customer-form" onSubmit={(e) => e.preventDefault()}>
-          {children}
-        </form>
+        {children}
       </main>
     </div>
   );
 }
 
 function CustomerFormFields() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const formRef = React.useRef(null);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const form = formRef.current;
+
+    if (!form) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setFeedbackMessage('');
+
+    const payload = {
+      full_name: form.full_name.value,
+      date_of_birth: form.date_of_birth.value,
+      e_mail: form.e_mail.value,
+      home_cep: form.home_cep.value,
+      home_street: form.home_street.value,
+      home_number: form.home_number.value,
+      home_city: form.home_city.value,
+      home_state: form.home_state.value,
+      social_number: form.social_number.value,
+    };
+
+    const params = new URLSearchParams();
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value !== '') {
+        params.append(key, value);
+      }
+    });
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/add_customer`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Não foi possível cadastrar o cliente.');
+      }
+
+      setFeedbackMessage('Cliente cadastrado com sucesso!');
+      form.reset();
+    } catch (error) {
+      setFeedbackMessage(error.message || 'Erro ao cadastrar cliente.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div className="div-3-columns">
-      <div>
-        <label>
-          Nome Completo *
-          <input type="text" name="full_name" required />
-        </label>
-
-        <label>
-          CPF *
-          <input type="text" name="social_number" required />
-        </label>
-
-        <label>
-          Data de Nascimento *
-          <input type="date" name="date_of_birth" required />
-        </label>
-
-        <label>
-          Email *
-          <input type="email" name="e_mail" required />
-        </label>
-      </div>
+    <form ref={formRef} className="customer-form" onSubmit={handleSubmit}>
       <div className="div-3-columns">
-        <label>
-          Endereço Residencial *
-          <input type="text" name="home_cep" placeholder="CEP" maxLength="9" required />
-          <input type="text" name="home_street" placeholder="Rua" required />
-          <input type="text" name="home_number" placeholder="Número" required />
-          <input type="text" name="home_city" placeholder="Cidade" required />
-          <input type="text" name="home_state" placeholder="Estado (UF)" required maxLength="2" />
-        </label>
-      </div>
+        <div>
+          <label>
+            Nome Completo *
+            <input type="text" name="full_name" required />
+          </label>
 
-      <div>
-        <Button type="submit">Cadastrar</Button>
+          <label>
+            CPF *
+            <input type="text" name="social_number" required />
+          </label>
+
+          <label>
+            Data de Nascimento *
+            <input type="date" name="date_of_birth" required />
+          </label>
+
+          <label>
+            Email *
+            <input type="email" name="e_mail" required />
+          </label>
+        </div>
+        <div className="div-3-columns">
+          <label>
+            Endereço Residencial *
+            <input type="text" name="home_cep" placeholder="CEP" maxLength="9" required />
+            <input type="text" name="home_street" placeholder="Rua" required />
+            <input type="text" name="home_number" placeholder="Número" required />
+            <input type="text" name="home_city" placeholder="Cidade" required />
+            <input type="text" name="home_state" placeholder="Estado (UF)" required maxLength="2" />
+          </label>
+        </div>
+
+        <div>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Enviando...' : 'Cadastrar'}
+          </Button>
+        </div>
       </div>
-    </div>
+      {feedbackMessage && <p className="form-feedback">{feedbackMessage}</p>}
+    </form>
   );
 }
 
 function TravelPlanFormFields() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const formRef = React.useRef(null);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const form = formRef.current;
+
+    if (!form) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setFeedbackMessage('');
+
+    const payload = {
+      customer_id: Number(form.customer_id.value),
+      origin: form.origin.value,
+      destination: form.destination.value,
+      start_date: form.start_date.value,
+      end_date: form.end_date.value,
+      travel_purpose: form.travel_purpose.value,
+    };
+
+    const params = new URLSearchParams();
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value !== '') {
+        params.append(key, value);
+      }
+    });
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/add_travel_plan`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Não foi possível cadastrar o plano de viagem.');
+      }
+
+      setFeedbackMessage('Plano de viagem cadastrado com sucesso!');
+      form.reset();
+    } catch (error) {
+      setFeedbackMessage(error.message || 'Erro ao cadastrar plano de viagem.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div className="div-3-columns">
-      <div>
-        <label>
-          Número de Cadastro de Cliente *
-          <input type="text" name="customer_id" required />
-        </label>
+    <form ref={formRef} className="customer-form" onSubmit={handleSubmit}>
+      <div className="div-3-columns">
+        <div>
+          <label>
+            Número de Cadastro de Cliente *
+            <input type="text" name="customer_id" required />
+          </label>
 
-        <label>
-          Origem *
-          <input type="text" name="origin" required />
-        </label>
+          <label>
+            Origem *
+            <input type="text" name="origin" required />
+          </label>
 
-        <label>
-          Destino *
-          <input type="text" name="destination" required />
-        </label>
+          <label>
+            Destino *
+            <input type="text" name="destination" required />
+          </label>
 
-        <label>
-          Data Início *
-          <input type="date" name="start_date" required />
-        </label>
+          <label>
+            Data Início *
+            <input type="date" name="start_date" required />
+          </label>
 
-        <label>
-          Data Fim *
-          <input type="date" name="end_date" required />
-        </label>
+          <label>
+            Data Fim *
+            <input type="date" name="end_date" required />
+          </label>
+        </div>
+        <div>
+          <label>
+            Propósito da Viagem *
+            <input type="text" name="travel_purpose" required />
+          </label>
+
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Enviando...' : 'Cadastrar'}
+          </Button>
+        </div>
       </div>
-      <div>
-        <label>
-          Propósito da Viagem *
-          <input type="text" name="travel_purpose" required />
-        </label>
-
-        <Button type="submit">Cadastrar</Button>
-      </div>
-    </div>
+      {feedbackMessage && <p className="form-feedback">{feedbackMessage}</p>}
+    </form>
   );
 }
 
 function TravelPlansPage() {
+  const [travelPlans, setTravelPlans] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    const loadTravelPlans = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/get_travel_plans`);
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || 'Não foi possível carregar os planos de viagem.');
+        }
+
+        setTravelPlans(result.travel_plans || []);
+      } catch (error) {
+        setErrorMessage(error.message || 'Erro ao carregar planos de viagem.');
+      }
+    };
+
+    loadTravelPlans();
+  }, []);
+
   return (
     <div className="app-container">
       <SiteHeader />
@@ -166,11 +307,27 @@ function TravelPlansPage() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td colSpan="9" className="empty-row">
-                    Nenhum plano de viagem cadastrado ainda.
-                  </td>
-                </tr>
+                {travelPlans.length === 0 ? (
+                  <tr>
+                    <td colSpan="9" className="empty-row">
+                      {errorMessage || 'Nenhum plano de viagem cadastrado ainda.'}
+                    </td>
+                  </tr>
+                ) : (
+                  travelPlans.map((plan) => (
+                    <tr key={plan.travel_plan_key}>
+                      <td>{plan.travel_plan_key}</td>
+                      <td>{plan.customer_id}</td>
+                      <td>-</td>
+                      <td>{plan.origin}</td>
+                      <td>{plan.destination}</td>
+                      <td>{plan.start_date}</td>
+                      <td>{plan.end_date}</td>
+                      <td>{plan.travel_purpose}</td>
+                      <td>-</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -181,6 +338,28 @@ function TravelPlansPage() {
 }
 
 function ClientsPage() {
+  const [customers, setCustomers] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    const loadCustomers = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/get_customers`);
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || 'Não foi possível carregar os clientes.');
+        }
+
+        setCustomers(result.customers || []);
+      } catch (error) {
+        setErrorMessage(error.message || 'Erro ao carregar clientes.');
+      }
+    };
+
+    loadCustomers();
+  }, []);
+
   return (
     <div className="app-container">
       <SiteHeader />
@@ -217,11 +396,30 @@ function ClientsPage() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td colSpan="12" className="empty-row">
-                    Nenhum cliente cadastrado ainda.
-                  </td>
-                </tr>
+                {customers.length === 0 ? (
+                  <tr>
+                    <td colSpan="12" className="empty-row">
+                      {errorMessage || 'Nenhum cliente cadastrado ainda.'}
+                    </td>
+                  </tr>
+                ) : (
+                  customers.map((customer) => (
+                    <tr key={customer.customer_key}>
+                      <td>{customer.customer_key}</td>
+                      <td>{customer.full_name}</td>
+                      <td>{customer.social_number}</td>
+                      <td>{customer.date_of_birth}</td>
+                      <td>{customer.e_mail}</td>
+                      <td>{customer.home_cep}</td>
+                      <td>{customer.home_street}</td>
+                      <td>{customer.home_number}</td>
+                      <td>{customer.home_city}</td>
+                      <td>{customer.home_state}</td>
+                      <td>{customer.travel_plan_id ?? '-'}</td>
+                      <td>-</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -244,7 +442,7 @@ function HomePage() {
       </div>
 
       <main className="site-body section-body">
-        <h2>Cadastros</h2>
+        <h2>Cadastrar</h2>
         <div className="cards-grid">
           <article className="card clickable" onClick={() => navigate('/customer')}>
             <h3>Clientes</h3>
