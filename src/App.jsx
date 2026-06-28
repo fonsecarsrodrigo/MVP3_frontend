@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import coverImage from '../images/bora_orneles_cover.webp';
 import servicesImage from '../images/bora_orneles_services.png';
 
@@ -63,6 +63,24 @@ function FormPage({ title, children }) {
         {children}
       </main>
     </div>
+  );
+}
+
+function AddTravelButton({ customerId }) {
+  const navigate = useNavigate();
+
+  return (
+    <Button
+      type="button"
+      className="action-button"
+      onClick={() =>
+        navigate('/travel', {
+          state: { customerId },
+        })
+      }
+    >
+      Adicionar Viagem
+    </Button>
   );
 }
 
@@ -176,6 +194,8 @@ function TravelPlanFormFields() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const formRef = React.useRef(null);
+  const location = useLocation();
+  const prefilledCustomerId = location.state?.customerId || '';
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -232,7 +252,7 @@ function TravelPlanFormFields() {
         <div>
           <label>
             Número de Cadastro de Cliente *
-            <input type="text" name="customer_id" required />
+            <input type="text" name="customer_id" defaultValue={prefilledCustomerId} required />
           </label>
 
           <label>
@@ -453,7 +473,7 @@ function ClientsPage() {
                       <td>{customer.home_city}</td>
                       <td>{customer.home_state}</td>
                       <td>{customer.travel_plan_id ?? '-'}</td>
-                      <td>-</td>
+                      <td><AddTravelButton customerId={customer.customer_key} /></td>
                     </tr>
                   ))
                 )}

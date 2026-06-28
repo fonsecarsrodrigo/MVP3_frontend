@@ -286,3 +286,20 @@ body {
   color: #6b7280;
   padding: 40px 0;
 }
+
+.action-button {
+  padding: 8px 14px;
+  font-size: 0.875rem;
+  background: #a626eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.action-button:hover {
+  background: #7c16c3;
+}
+
