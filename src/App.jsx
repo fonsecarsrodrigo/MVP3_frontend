@@ -166,6 +166,7 @@ function CustomerFormFields() {
           </Button>
         </div>
       </div>
+      {feedbackMessage && <p className="form-feedback">{feedbackMessage}</p>}
       <FeedbackModal message={feedbackMessage} onClose={() => setFeedbackMessage('')} />
     </form>
   );
@@ -265,6 +266,7 @@ function TravelPlanFormFields() {
           </Button>
         </div>
       </div>
+      {feedbackMessage && <p className="form-feedback">{feedbackMessage}</p>}
       <FeedbackModal message={feedbackMessage} onClose={() => setFeedbackMessage('')} />
     </form>
   );
@@ -273,6 +275,7 @@ function TravelPlanFormFields() {
 function TravelPlansPage() {
   const [travelPlans, setTravelPlans] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
 
   useEffect(() => {
     const loadTravelPlans = async () => {
@@ -284,9 +287,16 @@ function TravelPlansPage() {
           throw new Error(result.message || 'Não foi possível carregar os planos de viagem.');
         }
 
-        setTravelPlans(result.travel_plans || []);
+        const plans = result.travel_plans || [];
+        setTravelPlans(plans);
+        if (plans.length === 0) {
+          const message = 'Nenhum plano de viagem cadastrado ainda.';
+          setModalMessage(message);
+        }
       } catch (error) {
-        setErrorMessage(error.message || 'Erro ao carregar planos de viagem.');
+        const message = error.message || 'Erro ao carregar planos de viagem.';
+        setErrorMessage(message);
+        setModalMessage(message);
       }
     };
 
@@ -352,6 +362,7 @@ function TravelPlansPage() {
           </div>
         </details>
       </main>
+      <FeedbackModal message={modalMessage} onClose={() => setModalMessage('')} />
     </div>
   );
 }
@@ -359,6 +370,7 @@ function TravelPlansPage() {
 function ClientsPage() {
   const [customers, setCustomers] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
 
   useEffect(() => {
     const loadCustomers = async () => {
@@ -370,9 +382,16 @@ function ClientsPage() {
           throw new Error(result.message || 'Não foi possível carregar os clientes.');
         }
 
-        setCustomers(result.customers || []);
+        const list = result.customers || [];
+        setCustomers(list);
+        if (list.length === 0) {
+          const message = 'Nenhum cliente cadastrado ainda.';
+          setModalMessage(message);
+        }
       } catch (error) {
-        setErrorMessage(error.message || 'Erro ao carregar clientes.');
+        const message = error.message || 'Erro ao carregar clientes.';
+        setErrorMessage(message);
+        setModalMessage(message);
       }
     };
 
@@ -444,6 +463,7 @@ function ClientsPage() {
           </div>
         </details>
       </main>
+      <FeedbackModal message={modalMessage} onClose={() => setModalMessage('')} />
     </div>
   );
 }
