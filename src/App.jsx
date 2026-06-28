@@ -27,6 +27,23 @@ function BackButton({ to = '/' }) {
   );
 }
 
+function FeedbackModal({ message, onClose }) {
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <div className="feedback-modal-overlay" onClick={onClose}>
+      <div className="feedback-modal" onClick={(event) => event.stopPropagation()}>
+        <p>{message}</p>
+        <Button type="button" className="feedback-close-button" onClick={onClose}>
+          Fechar
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 function FormPage({ title, children }) {
   return (
     <div className="app-container">
@@ -122,6 +139,8 @@ function CustomerFormFields() {
 
           <label>
             Data de Nascimento *
+          </label>
+          <label>
             <input type="date" name="date_of_birth" required />
           </label>
 
@@ -147,7 +166,7 @@ function CustomerFormFields() {
           </Button>
         </div>
       </div>
-      {feedbackMessage && <p className="form-feedback">{feedbackMessage}</p>}
+      <FeedbackModal message={feedbackMessage} onClose={() => setFeedbackMessage('')} />
     </form>
   );
 }
@@ -246,7 +265,7 @@ function TravelPlanFormFields() {
           </Button>
         </div>
       </div>
-      {feedbackMessage && <p className="form-feedback">{feedbackMessage}</p>}
+      <FeedbackModal message={feedbackMessage} onClose={() => setFeedbackMessage('')} />
     </form>
   );
 }

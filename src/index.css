@@ -181,6 +181,12 @@ body {
   font-size: 0.95rem;
 }
 
+.customer-form input[type='date'] {
+  width: min(220px, 100%);
+  min-height: 44px;
+  cursor: pointer;
+}
+
 .customer-form button {
   margin-top: 8px;
   padding: 12px 20px;
@@ -193,6 +199,47 @@ body {
 }
 
 .customer-form button:hover {
+  background: #7c16c3;
+}
+
+.feedback-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.45);
+  padding: 20px;
+}
+
+.feedback-modal {
+  width: min(420px, 100%);
+  background: white;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+  text-align: center;
+}
+
+.feedback-modal p {
+  margin: 0 0 20px;
+  color: #111827;
+  font-size: 1rem;
+}
+
+.feedback-close-button {
+  width: 100%;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #a626eb;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.feedback-close-button:hover {
   background: #7c16c3;
 }
 
