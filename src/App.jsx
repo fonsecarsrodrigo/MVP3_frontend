@@ -17,11 +17,26 @@ function Button({ type = 'button', className = '', onClick, children, ...props }
   );
 }
 
-function BackButton({ to = '/' }) {
+function BackButton({ to }) {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleBack = () => {
+    if (to) {
+      navigate(to);
+      return;
+    }
+
+    if (location.key && location.key !== 'default') {
+      navigate(-1);
+      return;
+    }
+
+    navigate('/');
+  };
 
   return (
-    <Button className="back-button" onClick={() => navigate(to)}>
+    <Button className="back-button" onClick={handleBack}>
       ← Voltar
     </Button>
   );
@@ -52,7 +67,7 @@ function FormPage({ title, children }) {
       <main className="site-body customer-form-page">
         <div className="page-title-row">
           <div className="page-title-cell">
-            <BackButton to="/" />
+            <BackButton />
           </div>
           <div className="page-title-cell page-title-center">
             <h1>{title}</h1>
@@ -445,7 +460,7 @@ function TravelPlansPage() {
       <main className="site-body customer-form-page">
         <div className="page-title-row">
           <div className="page-title-cell">
-            <BackButton to="/" />
+            <BackButton />
           </div>
           <div className="page-title-cell page-title-center">
             <h1>Planos de Viagens</h1>
@@ -544,7 +559,7 @@ function ClientsPage() {
       <main className="site-body customer-form-page">
         <div className="page-title-row">
           <div className="page-title-cell">
-            <BackButton to="/" />
+            <BackButton />
           </div>
           <div className="page-title-cell page-title-center">
             <h1>Clientes</h1>
@@ -685,7 +700,7 @@ function NotFoundPage() {
 
         <div className="not-found-content">
           <p>A página que você tentou acessar não existe.</p>
-          <BackButton to="/" />
+          <BackButton />
         </div>
       </main>
     </div>
