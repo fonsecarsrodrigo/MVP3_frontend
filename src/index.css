@@ -256,29 +256,49 @@ body {
 
 .table-container {
   overflow-x: auto;
+  padding: 4px;
 }
 
 .data-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   min-width: 900px;
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(166, 38, 235, 0.08);
 }
 
 .data-table th,
 .data-table td {
-  border: 1px solid #e2e8f0;
+  border-bottom: 1px solid #ece7f7;
   padding: 14px 16px;
-  text-align: left;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .data-table th {
-  background: #f8fafc;
+  background: linear-gradient(135deg, #a626eb 0%, #8b21c7 100%);
+  color: white;
   font-weight: 700;
-  color: #111827;
+  letter-spacing: 0.02em;
+}
+
+.data-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+  background: #f7ebff;
 }
 
 .data-table tbody tr:nth-child(even) {
-  background: #f8fafc;
+  background: #fcf8ff;
+}
+
+.data-table tbody tr:nth-child(even):hover {
+  background: #f2e5ff;
 }
 
 .empty-row {
