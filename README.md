@@ -1,66 +1,50 @@
 # Bora Orneles — Frontend
 
-Frontend web app for managing customers and travel plans.
+Frontend web app for managing customers and travel plans (Vite + React).
 
-This project is built with **React**, **Vite**, and **React Router DOM**. It connects to the backend API running at `http://127.0.0.1:5001` and provides pages for:
+Summary
+— Modular React app with pages for customer registration, travel-plan creation, client management and review.
+— Built with React 18, Vite and React Router DOM; components are under `src/components`, pages under `src/pages` and form fragments under `src/forms`.
 
-- customer registration
-- travel plan creation
-- client management
-- travel plan review
-- client-specific travel actions
+Quick Start
 
-## Prerequisites
-
+Requirements
 - Node.js 18+ and npm
-- Backend service running separately at `http://127.0.0.1:5001`
 
-## Local setup
-
-Install dependencies from the project root:
-
+Install
 ```bash
 npm install
 ```
 
-## Run the app
-
-Start the development server:
-
+Development
 ```bash
 npm run dev
 ```
+Open the URL shown by Vite (typically `http://127.0.0.1:5173`).
 
-Open the app in the browser at the URL shown by Vite, typically:
-
-- `http://127.0.0.1:5173`
-
-## Build for production
-
-Compile the app for production:
-
+Build / Preview
 ```bash
 npm run build
-```
-
-Preview the production build locally:
-
-```bash
 npm run preview
 ```
 
-## Project structure
+Project layout (important files)
 
 | Path | Purpose |
 |------|---------|
-| `src/App.jsx` | Main React app with routes and page components |
-| `src/main.jsx` | App entry point for Vite |
-| `src/index.css` | Shared stylesheet and UI styling |
+| `src/main.jsx` | App entry and Router mounting |
+| `src/App.jsx` | Route definitions (composes pages) |
+| `src/components/` | Reusable UI components (Button, BackButton, SiteHeader, FeedbackModal, etc.) |
+| `src/pages/` | Page-level components (HomePage, ClientsPage, TravelPlansPage, NotFoundPage) |
+| `src/forms/` | Form fragments used inside pages (CustomerFormFields, TravelPlanFormFields) |
+| `src/index.css` | Global styles and table/card styles |
 | `images/` | Static assets used by the UI |
-| `index.html` | Vite HTML template |
 
-## Notes
+Notes about runtime behavior
+- The frontend currently communicates with a backend service expected at `http://127.0.0.1:5001` for customers and travel-plan operations.
 
-- The app assumes the backend API endpoints are available at `http://127.0.0.1:5001`.
-- If the backend is not running, customer and travel-plan operations will fail.
-- Use the backend README in `../MVP2_backend/README.md` for backend setup details.
+Testing & verification
+- Build: `npm run build` (verified locally after README update)
+
+Repository
+- Remote: https://github.com/fonsecarsrodrigo/MVP23_frontend.git
