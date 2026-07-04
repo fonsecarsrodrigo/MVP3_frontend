@@ -20,13 +20,26 @@ Development
 ```bash
 npm run dev
 ```
-Open the URL shown by Vite (typically `http://127.0.0.1:5173`).
+Open the URL shown by Vite.
 
 Build / Preview
 ```bash
 npm run build
 npm run preview
 ```
+
+Docker
+```bash
+# Build image
+docker build -t bora-orneles .
+
+# Run container on port 4173
+docker run -p 4173:4173 bora-orneles
+
+# Stop the container
+docker stop $(docker ps -q --filter ancestor=bora-orneles)
+```
+Access the app at `http://127.0.0.1:4173`.
 
 Project layout (important files)
 
