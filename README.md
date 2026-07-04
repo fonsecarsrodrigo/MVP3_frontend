@@ -65,5 +65,5 @@ Access the app at `http://127.0.0.1:4173`.
 
 - The frontend currently communicates with a backend service expected at `http://127.0.0.1:5001`.
 
-- Tip: Use `make server-seed` on the backend to populate database with data.
+- Tip: Use `make server-run` than `make server-seed` on the backend to initialize and populate database with data.
 
